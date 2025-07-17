@@ -1,157 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Render Deployment</title>
+  <meta charset="UTF-8">
+  <title>Hacklink-XD Bot Auto Deploy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/all.min.css">
   <style>
-    /* Your existing styles (unchanged) */
     body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      background-size: 400% 400%;
+      animation: gradient 10s ease infinite;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
       margin: 0;
-      font-family: 'Roboto', sans-serif;
-      color: #fff;
-      background: linear-gradient(45deg, #ff0040, #8c00ff, #0044ff, #00c6ff, #00ff92, #ffeb00, #ff7700);
-      background-size: 400% 400%;
-      animation: gradientAnimation 6s infinite;
+      color: white;
     }
-    @keyframes gradientAnimation {
+
+    @keyframes gradient {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+
     .container {
       text-align: center;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 50px;
-      width: 500px;
-      border-radius: 20px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-      animation: scaleUp 1.5s ease-in-out;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
     }
-    .input {
-      width: 100%;
-      padding: 15px;
-      font-size: 17px;
-      color: #fff;
-      border: 2px solid #555;
-      border-radius: 10px;
-      margin-top: 15px;
-      background: rgba(255, 255, 255, 0.1);
-      transition: 0.3s;
+
+    h2 {
+      margin-bottom: 20px;
     }
-    .input:focus {
-      border-color: #00ff92;
-      outline: none;
-      box-shadow: 0 0 10px #00ff92;
-    }
+
     .button {
-      width: 100%;
-      border: none;
-      padding: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #fff;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 20px;
-      background: linear-gradient(45deg, #ff0040, #8c00ff, #0044ff);
-      transition: 0.5s;
-    }
-    .button:hover {
-      background: linear-gradient(45deg, #00ff92, #ffeb00, #ff7700);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    }
-    .fork-section {
-      margin-top: 20px;
-      display: none;
-    }
-    .fork-button {
-      padding: 15px;
-      font-size: 16px;
-      font-weight: bold;
+      background: #00c6ff;
       color: white;
+      padding: 15px 30px;
+      font-size: 18px;
       border: none;
-      background-color: #ff7700;
       border-radius: 10px;
       cursor: pointer;
-      text-decoration: none;
+      transition: 0.3s ease;
     }
-    .fork-button:hover {
-      background-color: #ff0040;
+
+    .button:hover {
+      background: #00ff92;
+      transform: scale(1.05);
+    }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: yellow;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Welcome User</h2>
-    <form id="deployForm">
-      <input placeholder="Enter Your GitHub Username" class="input" id="githubUsername" type="text">
-      <div id="passwordSection" style="display: none;">
-        <input placeholder="Enter Password" class="input" id="passwordInput" type="password">
-      </div>
-      <button class="button" type="submit">Deploy to Render</button>
-    </form>
-    <div id="statusMessage" style="color: yellow; font-weight: bold; margin-top: 20px;"></div>
-    <div id="forkSection" class="fork-section">
-      <p>Make sure you have the latest forked version of the TOHID-AI repository.</p>
-      <a href="https://github.com/Tohidkhan6332/TOHID-AI/fork" target="_blank" class="fork-button">Fork TOHID-AI Repository</a>
-    </div>
+    <h2>🚀 Deploy Your Bot to Render (Hacklink-XD)</h2>
+    <button class="button" onclick="autoDeploy()">Click to Auto Deploy</button>
+    <div id="status"></div>
   </div>
 
   <script>
-    const correctPassword = "shoro786";
-    const deployForm = document.getElementById("deployForm");
+    async function autoDeploy() {
+      const status = document.getElementById('status');
+      status.textContent = "Triggering deployment to Render...";
 
-    deployForm.addEventListener("submit", async function (event) {
-      event.preventDefault(); // prevent form from submitting the normal way
+      const deployHookUrl = "https://api.render.com/deploy/srv-d1r472adbo4c73e5pk0g?key=kzMU6ZxtVzs";
 
-      const usernameInput = document.getElementById("githubUsername");
-      const username = usernameInput.value.trim();
-      const passwordInput = document.getElementById("passwordInput");
-      const passwordSection = document.getElementById("passwordSection");
-      const statusMessage = document.getElementById("statusMessage");
-      const forkSection = document.getElementById("forkSection");
-
-      if (!username) {
-        statusMessage.textContent = "Please enter a valid GitHub username!";
-        return;
-      }
-
-      if (username === "Tohidkhan6332") {
-        passwordSection.style.display = "block";
-
-        if (!passwordInput.value) {
-          statusMessage.textContent = "Please enter the password.";
-          return;
-        }
-
-        if (passwordInput.value !== correctPassword) {
-          statusMessage.textContent = "Incorrect password. Please try again.";
-          return;
-        }
-      }
-
-      // Check if user's repo exists
-      const repoUrl = `https://api.github.com/repos/${username}/TOHID-AI`;
       try {
-        const response = await fetch(repoUrl);
+        const response = await fetch(deployHookUrl, {
+          method: "POST"
+        });
+
         if (response.ok) {
-          // Redirect to Render deploy URL
-          window.location.href = `https://dashboard.render.com/web/new?repo=https://github.com/${username}/TOHID-AI`;
+          status.textContent = "✅ Deployment triggered successfully!";
         } else {
-          statusMessage.textContent = "Repository not found. Please fork the TOHID-AI repository.";
-          forkSection.style.display = "block";
+          status.textContent = "❌ Failed to trigger deployment. Please check your hook.";
         }
-      } catch (err) {
-        statusMessage.textContent = "Error checking repository. Please try again.";
+      } catch (error) {
+        status.textContent = "❌ Error: " + error.message;
       }
-    });
+    }
   </script>
 </body>
 </html>
