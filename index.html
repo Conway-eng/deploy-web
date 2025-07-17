@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <title>Render Deployment</title>
-  <link rel="stylesheet" href="css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/all.min.css">
   <style>
+    /* Your existing styles (unchanged) */
     body {
       display: flex;
       justify-content: center;
@@ -18,19 +19,11 @@
       background-size: 400% 400%;
       animation: gradientAnimation 6s infinite;
     }
-
     @keyframes gradientAnimation {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-
     .container {
       text-align: center;
       background: rgba(0, 0, 0, 0.8);
@@ -40,7 +33,6 @@
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
       animation: scaleUp 1.5s ease-in-out;
     }
-
     .input {
       width: 100%;
       padding: 15px;
@@ -52,13 +44,11 @@
       background: rgba(255, 255, 255, 0.1);
       transition: 0.3s;
     }
-
     .input:focus {
       border-color: #00ff92;
       outline: none;
       box-shadow: 0 0 10px #00ff92;
     }
-
     .button {
       width: 100%;
       border: none;
@@ -72,18 +62,15 @@
       background: linear-gradient(45deg, #ff0040, #8c00ff, #0044ff);
       transition: 0.5s;
     }
-
     .button:hover {
       background: linear-gradient(45deg, #00ff92, #ffeb00, #ff7700);
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
-
     .fork-section {
       margin-top: 20px;
       display: none;
     }
-
     .fork-button {
       padding: 15px;
       font-size: 16px;
@@ -95,17 +82,15 @@
       cursor: pointer;
       text-decoration: none;
     }
-
     .fork-button:hover {
       background-color: #ff0040;
     }
   </style>
 </head>
-
 <body>
   <div class="container">
     <h2>Welcome User</h2>
-    <form onsubmit="return handleUsernameInput();">
+    <form id="deployForm">
       <input placeholder="Enter Your GitHub Username" class="input" id="githubUsername" type="text">
       <div id="passwordSection" style="display: none;">
         <input placeholder="Enter Password" class="input" id="passwordInput" type="password">
@@ -121,29 +106,21 @@
 
   <script>
     const correctPassword = "shoro786";
+    const deployForm = document.getElementById("deployForm");
 
-    async function doesGitHubRepoExist(owner, repo) {
-      const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
-      try {
-        const response = await fetch(apiUrl);
-        return response.status === 200;
-      } catch (error) {
-        console.error(`Error checking GitHub repository: ${error.message}`);
-        return false;
-      }
-    }
+    deployForm.addEventListener("submit", async function (event) {
+      event.preventDefault(); // prevent form from submitting the normal way
 
-    function handleUsernameInput() {
       const usernameInput = document.getElementById("githubUsername");
       const username = usernameInput.value.trim();
-      const passwordSection = document.getElementById("passwordSection");
       const passwordInput = document.getElementById("passwordInput");
+      const passwordSection = document.getElementById("passwordSection");
       const statusMessage = document.getElementById("statusMessage");
       const forkSection = document.getElementById("forkSection");
 
       if (!username) {
         statusMessage.textContent = "Please enter a valid GitHub username!";
-        return false;
+        return;
       }
 
       if (username === "Tohidkhan6332") {
@@ -151,36 +128,30 @@
 
         if (!passwordInput.value) {
           statusMessage.textContent = "Please enter the password.";
-          return false;
+          return;
         }
 
         if (passwordInput.value !== correctPassword) {
           statusMessage.textContent = "Incorrect password. Please try again.";
-          return false;
+          return;
         }
-
-        statusMessage.textContent = "";
       }
 
-      checkAndDeploy(username);
-      return false;
-    }
-
-    async function checkAndDeploy(username) {
-      const repoName = "TOHID-AI";
-      const statusMessage = document.getElementById("statusMessage");
-      const forkSection = document.getElementById("forkSection");
-
-      const repoExists = await doesGitHubRepoExist(username, repoName);
-
-      if (repoExists) {
-        const renderURL = `https://dashboard.render.com/web/new?repo=https://github.com/${username}/${repoName}`;
-        window.location.href = renderURL;
-      } else {
-        statusMessage.textContent = "Repository not found. Please fork the TOHID-AI repository.";
-        forkSection.style.display = "block";
+      // Check if user's repo exists
+      const repoUrl = `https://api.github.com/repos/${username}/TOHID-AI`;
+      try {
+        const response = await fetch(repoUrl);
+        if (response.ok) {
+          // Redirect to Render deploy URL
+          window.location.href = `https://dashboard.render.com/web/new?repo=https://github.com/${username}/TOHID-AI`;
+        } else {
+          statusMessage.textContent = "Repository not found. Please fork the TOHID-AI repository.";
+          forkSection.style.display = "block";
+        }
+      } catch (err) {
+        statusMessage.textContent = "Error checking repository. Please try again.";
       }
-    }
+    });
   </script>
 </body>
 </html>
