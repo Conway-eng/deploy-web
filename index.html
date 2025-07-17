@@ -1,6 +1,8 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="utf-8">
-  <title>Heroku Deployment</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Render Deployment</title>
   <link rel="stylesheet" href="css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
@@ -108,7 +110,7 @@
       <div id="passwordSection" style="display: none;">
         <input placeholder="Enter Password" class="input" id="passwordInput" type="password">
       </div>
-      <button class="button" type="submit">Deploy to Heroku</button>
+      <button class="button" type="submit">Deploy to Render</button>
     </form>
     <div id="statusMessage" style="color: yellow; font-weight: bold; margin-top: 20px;"></div>
     <div id="forkSection" class="fork-section">
@@ -116,6 +118,7 @@
       <a href="https://github.com/Tohidkhan6332/TOHID-AI/fork" target="_blank" class="fork-button">Fork TOHID-AI Repository</a>
     </div>
   </div>
+
   <script>
     const correctPassword = "shoro786";
 
@@ -171,15 +174,13 @@
       const repoExists = await doesGitHubRepoExist(username, repoName);
 
       if (repoExists) {
-        const herokuURL = `https://dashboard.heroku.com/new-app?template=https://github.com/${username}/${repoName}`;
-        window.location.href = herokuURL;
+        const renderURL = `https://render.com/deploy?repo=https://github.com/${username}/${repoName}`;
+        window.location.href = renderURL;
       } else {
         statusMessage.textContent = "Repository not found. Please fork the TOHID-AI repository.";
         forkSection.style.display = "block";
       }
     }
   </script>
-
-
-
-</body></html>
+</body>
+</html>
