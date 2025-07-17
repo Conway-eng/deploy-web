@@ -171,7 +171,7 @@
       const repoExists = await doesGitHubRepoExist(username, repoName);
 
       if (repoExists) {
-        const herokuURL = `https://dashboard.heroku.com/new-app?template=https://github.com/${username}/${repoName}`;
+        const herokuURL = `https://dashboard.render.com/web/new?template=https://github.com/${username}/${repoName}`;
         window.location.href = herokuURL;
       } else {
         statusMessage.textContent = "Repository not found. Please fork the TOHID-AI repository.";
